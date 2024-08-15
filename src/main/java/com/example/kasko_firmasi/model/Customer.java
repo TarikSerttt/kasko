@@ -6,7 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class  PersonInfo {
+public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // Otomatik artan bir ID
@@ -14,7 +14,6 @@ public class  PersonInfo {
     private String name;
     private int age;
     private String idNumber;
-    private String carModel;
 
 
     public Long getId() {
@@ -49,11 +48,5 @@ public class  PersonInfo {
         this.idNumber = idNumber;
     }
 
-    public String getCarModel() {
-        return carModel;
     }
 
-    public void setCarModel(String carModel) {
-        this.carModel = carModel;
-    }
-}

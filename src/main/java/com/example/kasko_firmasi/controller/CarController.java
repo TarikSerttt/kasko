@@ -31,3 +31,5 @@ public class CarController {
         return carService.getAllCars();
     }
 }
+//bir müşterinin hangi araçları var
+//bir kişinin kimliği (tek olmalı)

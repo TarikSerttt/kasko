@@ -1,6 +1,6 @@
 package com.example.kasko_firmasi.service;
 
-import com.example.kasko_firmasi.model.PersonInfo;
+import com.example.kasko_firmasi.model.Customer;
 import com.example.kasko_firmasi.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,23 +15,23 @@ public class CustomerService {
     private CustomerRepository customerRepository;
 
     // Müşteri kaydetme
-    public PersonInfo saveCustomer(PersonInfo personInfo) {
-        return customerRepository.save(personInfo);
+    public Customer saveCustomer(Customer customer) {
+        return customerRepository.save(customer);
     }
 
     // Tüm müşterileri listeleme
-    public List<PersonInfo> getAllCustomers() {
+    public List<Customer> getAllCustomers() {
         return customerRepository.findAll();
     }
 
     // Belirli bir müşteriyi ID'sine göre bulma
-    public Optional<PersonInfo> getCustomerById(Long id) {
+    public Optional<Customer> getCustomerById(Long id) {
         return customerRepository.findById(id);
     }
 
     // Müşteri bilgilerini güncelleme
-    public PersonInfo updateCustomer(PersonInfo personInfo) {
-        return customerRepository.save(personInfo);
+    public Customer updateCustomer(Customer customer) {
+        return customerRepository.save(customer);
     }
 
     // Müşteri silme

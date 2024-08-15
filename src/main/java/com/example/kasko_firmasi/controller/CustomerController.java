@@ -1,6 +1,6 @@
 package com.example.kasko_firmasi.controller;
 
-import com.example.kasko_firmasi.model.PersonInfo;
+import com.example.kasko_firmasi.model.Customer;
 import com.example.kasko_firmasi.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,23 +16,23 @@ public class CustomerController {
     private CustomerService customerService;
 
     @PostMapping("/add")
-    public PersonInfo addCustomer(@RequestBody PersonInfo personInfo) {
-        return customerService.saveCustomer(personInfo);
+    public Customer addCustomer(@RequestBody Customer customer) {
+        return customerService.saveCustomer(customer);
     }
 
     @GetMapping("/all")
-    public List<PersonInfo> getAllCustomers() {
+    public List<Customer> getAllCustomers() {
         return customerService.getAllCustomers();
     }
 
     @GetMapping("/{id}")
-    public Optional<PersonInfo> getCustomerById(@PathVariable Long id) {
+    public Optional<Customer> getCustomerById(@PathVariable Long id) {
         return customerService.getCustomerById(id);
     }
 
     @PutMapping("/update")
-    public PersonInfo updateCustomer(@RequestBody PersonInfo personInfo) {
-        return customerService.updateCustomer(personInfo);
+    public Customer updateCustomer(@RequestBody Customer customer) {
+        return customerService.updateCustomer(customer);
     }
 
     @DeleteMapping("/delete/{id}")
