@@ -1,52 +1,32 @@
 package com.example.kasko_firmasi.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
+@Getter
+@Setter
+@ToString
 public class Customer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)  // Otomatik artan bir ID
+
     private Long id;
     private String name;
     private int age;
     private String idNumber;
 
+    // Müşteri ile araba arasında bir One-to-Many ilişkisi tanımlıyoruz
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<Car> cars = new ArrayList<>();
 
-    public Long getId() {
-        return id;
+    public void addCar(Car car) {
+        this.cars.add(car);
+        car.setCustomer(this); // Arabayı bu müşteri ile ilişkilendiriyoruz
     }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getIdNumber() {
-        return idNumber;
-    }
-
-    public void setIdNumber(String idNumber) {
-        this.idNumber = idNumber;
-    }
-
-    }
-
+}

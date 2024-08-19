@@ -3,6 +3,7 @@ package com.example.kasko_firmasi.controller;
 import com.example.kasko_firmasi.model.Car;
 import com.example.kasko_firmasi.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,6 +31,10 @@ public class CarController {
     public Iterable<Car> getAllCars() {
         return carService.getAllCars();
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCar(@PathVariable Long id) {
+        carService.deleteCarById(id);
+        return ResponseEntity.noContent().build();
+    }
 }
-//bir müşterinin hangi araçları var
-//bir kişinin kimliği (tek olmalı)
