@@ -3,6 +3,7 @@ package com.example.kasko_firmasi.controller;
 import com.example.kasko_firmasi.model.Car;
 import com.example.kasko_firmasi.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,18 +19,21 @@ public class CarController {
     }
 
     @PostMapping
-    public Car addCar(@RequestBody Car car) {
-        return carService.saveCar(car);
+    public ResponseEntity<Car> addCar(@RequestBody Car car) {
+        Car savedCar = carService.saveCar(car);
+        return new ResponseEntity<>(savedCar, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public Car getCar(@PathVariable Long id) {
-        return carService.getCarById(id);
+    public ResponseEntity<Car> getCar(@PathVariable Long id) {
+        Car car = carService.getCarById(id);
+        return car != null ? ResponseEntity.ok(car) : ResponseEntity.notFound().build();
     }
 
     @GetMapping
-    public Iterable<Car> getAllCars() {
-        return carService.getAllCars();
+    public ResponseEntity<Iterable<Car>> getAllCars() {
+        Iterable<Car> cars = carService.getAllCars();
+        return ResponseEntity.ok(cars);
     }
 
     @DeleteMapping("/{id}")
