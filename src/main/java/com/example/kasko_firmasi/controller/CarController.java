@@ -41,4 +41,17 @@ public class CarController {
         carService.deleteCarById(id);
         return ResponseEntity.noContent().build();
     }
+    @PutMapping("/{id}/accept-price")
+    public ResponseEntity<String> acceptPrice(@PathVariable Long id, @RequestBody boolean accept) {
+        Car car = carService.getCarById(id);
+        if (car == null) {
+            return ResponseEntity.notFound().build();
+        }
+        if (accept) {
+            return ResponseEntity.ok("Price accepted.");
+        } else {
+            return ResponseEntity.ok("Price declined.");
+        }
+    }
+
 }
