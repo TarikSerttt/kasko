@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/cars")
 public class CarController {
@@ -26,8 +28,8 @@ public class CarController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Car> getCar(@PathVariable Long id) {
-        Car car = carService.getCarById(id);
-        return car != null ? ResponseEntity.ok(car) : ResponseEntity.notFound().build();
+        Optional<Car> car = carService.getCarById(id);
+        return car.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping
@@ -41,17 +43,33 @@ public class CarController {
         carService.deleteCarById(id);
         return ResponseEntity.noContent().build();
     }
+
     @PutMapping("/{id}/accept-price")
     public ResponseEntity<String> acceptPrice(@PathVariable Long id, @RequestBody boolean accept) {
-        Car car = carService.getCarById(id);
-        if (car == null) {
+        Optional<Car> carOptional = carService.getCarById(id);
+        if (carOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+
+        Car car = carOptional.get();
         if (accept) {
+            car.setPriceAccepted(true); // Fiyatın kabul edilme durumu güncelleniyor
+            carService.updateCar(id, car); // Güncellenmiş araba veritabanına kaydediliyor
             return ResponseEntity.ok("Price accepted.");
         } else {
+            car.setPriceAccepted(false); // Fiyatın reddedilme durumu güncelleniyor
+            carService.updateCar(id, car); // Güncellenmiş araba veritabanına kaydediliyor
             return ResponseEntity.ok("Price declined.");
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateCar(@PathVariable Long id, @RequestBody Car carDetails) {
+        Optional<Car> existingCar = carService.getCarById(id);
+        if (existingCar.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Hatalı ID girildi");
+        }
+        Car updatedCar = carService.updateCar(id, carDetails);
+        return ResponseEntity.ok(updatedCar);
+    }
 }

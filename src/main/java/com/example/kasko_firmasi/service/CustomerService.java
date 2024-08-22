@@ -29,13 +29,28 @@ public class CustomerService {
         return customerRepository.findById(id);
     }
 
-    // Müşteri bilgilerini güncelleme
-    public Customer updateCustomer(Customer customer) {
-        return customerRepository.save(customer);
+    // Müşteri güncelleme veya hata döndürme
+    public Customer updateCustomer(Long id, Customer customerDetails) {
+        Customer existingCustomer = customerRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Hatalı ID: Müşteri bulunamadı"));
+
+        // Mevcut müşteri bilgilerini güncelle
+        existingCustomer.setName(customerDetails.getName());
+        existingCustomer.setAge(customerDetails.getAge());
+
+        // Bu satırı kontrol edin
+        if (customerDetails.getIdNumber() != null) {
+            existingCustomer.setIdNumber(customerDetails.getIdNumber());
+        }
+
+        return customerRepository.save(existingCustomer);
     }
 
     // Müşteri silme
     public void deleteCustomer(Long id) {
+        if (!customerRepository.existsById(id)) {
+            throw new IllegalArgumentException("Hatalı ID: Müşteri bulunamadı");
+        }
         customerRepository.deleteById(id);
     }
 }

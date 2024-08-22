@@ -5,22 +5,17 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Car {
 
+public class CarPriceCalculator {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String model;
-    private int year;
-    private String licensePlate;
-    private String brand;
     private double price;
+    private boolean accepted; // Bu alan fiyatın kabul edilip edilmediğini gösterecek
 
     @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
-
-    private boolean priceAccepted;
+    @JoinColumn(name = "car_id")
+    private Car car;
 
 }

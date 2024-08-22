@@ -4,6 +4,7 @@ import com.example.kasko_firmasi.model.Customer;
 import com.example.kasko_firmasi.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,14 +31,14 @@ public class CustomerController {
         return customerService.getCustomerById(id);
     }
 
-    @PutMapping("/update")
-    public Customer updateCustomer(@RequestBody Customer customer) {
-        return customerService.updateCustomer(customer);
+    @PutMapping("/{id}")
+    public ResponseEntity<Customer> updateCustomer(@PathVariable Long id, @RequestBody Customer customerDetails) {
+        Customer updatedCustomer = customerService.updateCustomer(id, customerDetails);
+        return ResponseEntity.ok(updatedCustomer);
     }
 
     @DeleteMapping("/delete/{id}")
     public void deleteCustomer(@PathVariable Long id) {
         customerService.deleteCustomer(id);
-
     }
 }
