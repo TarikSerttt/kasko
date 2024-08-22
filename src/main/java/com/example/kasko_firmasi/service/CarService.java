@@ -3,12 +3,16 @@ package com.example.kasko_firmasi.service;
 import com.example.kasko_firmasi.model.Car;
 import com.example.kasko_firmasi.model.CarPriceCalculator;
 import com.example.kasko_firmasi.repository.CarRepository;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Optional;
 
 @Service
+@Validated
 public class CarService {
 
     @Autowired
@@ -17,7 +21,7 @@ public class CarService {
     @Autowired
     private CarRepository carRepository;
 
-    public Car saveCar(Car car) {
+    public Car saveCar(@Valid Car car) {
         // Arabayı veritabanına kaydet
         Car savedCar = carRepository.save(car);
 
@@ -31,7 +35,7 @@ public class CarService {
         return carRepository.save(savedCar);
     }
 
-    public Optional<Car> getCarById(Long id) {
+    public Optional<Car> getCarById(@NotNull Long id) {
         return carRepository.findById(id);
     }
 
@@ -39,11 +43,16 @@ public class CarService {
         return carRepository.findAll();
     }
 
-    public void deleteCarById(Long id) {
-        carRepository.deleteById(id);
+    public void deleteCarById(@NotNull Long id) {
+        if (carRepository.existsById(id)) {
+            carRepository.deleteById(id);
+        } else {
+            // Eğer araba bulunamazsa uygun bir işlem yapılabilir
+            throw new RuntimeException("Car not found with ID: " + id);
+        }
     }
 
-    public Car updateCar(Long id, Car carDetails) {
+    public Car updateCar(@NotNull Long id, @Valid Car carDetails) {
         if (carRepository.existsById(id)) {
             carDetails.setId(id);
 
@@ -57,7 +66,8 @@ public class CarService {
             updatedCar.setPrice(calculator.getPrice());
 
             return carRepository.save(updatedCar);
+        } else {
+            throw new RuntimeException("Car not found with ID: " + id);
         }
-        return null; // veya uygun bir hata işleme mekanizması
     }
 }

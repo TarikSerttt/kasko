@@ -2,9 +2,11 @@ package com.example.kasko_firmasi.controller;
 
 import com.example.kasko_firmasi.model.Car;
 import com.example.kasko_firmasi.service.CarService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -21,7 +23,10 @@ public class CarController {
     }
 
     @PostMapping
-    public ResponseEntity<Car> addCar(@RequestBody Car car) {
+    public ResponseEntity<?> addCar(@Valid @RequestBody Car car, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        }
         Car savedCar = carService.saveCar(car);
         return new ResponseEntity<>(savedCar, HttpStatus.CREATED);
     }
@@ -39,9 +44,13 @@ public class CarController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCar(@PathVariable Long id) {
+    public ResponseEntity<String> deleteCar(@PathVariable Long id) {
+        Optional<Car> existingCar = carService.getCarById(id);
+        if (existingCar.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Car not found with ID: " + id);
+        }
         carService.deleteCarById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Car deleted successfully.");
     }
 
     @PutMapping("/{id}/accept-price")
@@ -52,23 +61,22 @@ public class CarController {
         }
 
         Car car = carOptional.get();
-        if (accept) {
-            car.setPriceAccepted(true); // Fiyatın kabul edilme durumu güncelleniyor
-            carService.updateCar(id, car); // Güncellenmiş araba veritabanına kaydediliyor
-            return ResponseEntity.ok("Price accepted.");
-        } else {
-            car.setPriceAccepted(false); // Fiyatın reddedilme durumu güncelleniyor
-            carService.updateCar(id, car); // Güncellenmiş araba veritabanına kaydediliyor
-            return ResponseEntity.ok("Price declined.");
-        }
+        car.setPriceAccepted(accept); // Fiyatın kabul edilme durumu güncelleniyor
+        carService.updateCar(id, car); // Güncellenmiş araba veritabanına kaydediliyor
+        return ResponseEntity.ok(accept ? "Price accepted." : "Price declined.");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateCar(@PathVariable Long id, @RequestBody Car carDetails) {
+    public ResponseEntity<?> updateCar(@PathVariable Long id, @Valid @RequestBody Car carDetails, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        }
+
         Optional<Car> existingCar = carService.getCarById(id);
         if (existingCar.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Hatalı ID girildi");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Car not found with ID: " + id);
         }
+
         Car updatedCar = carService.updateCar(id, carDetails);
         return ResponseEntity.ok(updatedCar);
     }
