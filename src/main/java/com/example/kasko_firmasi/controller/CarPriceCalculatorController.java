@@ -3,27 +3,38 @@ package com.example.kasko_firmasi.controller;
 import com.example.kasko_firmasi.model.CarPriceCalculator;
 import com.example.kasko_firmasi.service.CarPriceCalculatorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-@RestController
-@RequestMapping("/calculate")
+@Controller
 public class CarPriceCalculatorController {
 
     @Autowired
     private CarPriceCalculatorService carPriceCalculatorService;
 
-    // Fiyat hesaplama ve kaydetme
-    @PostMapping("/{carId}")
-    public ResponseEntity<CarPriceCalculator> calculatePrice(@PathVariable Long carId) {
-        CarPriceCalculator result = carPriceCalculatorService.calculateAndSavePrice(carId);
-        return ResponseEntity.ok(result);
+    @RequestMapping("/")
+    public String index() {
+        return "index";
     }
 
-    // Fiyatın kabul edilip edilmediğinin onayı
-    @PutMapping("/confirm/{id}")
-    public ResponseEntity<CarPriceCalculator> confirmPrice(@PathVariable Long id, @RequestParam boolean isAccepted) {
-        CarPriceCalculator result = carPriceCalculatorService.confirmPrice(id, isAccepted);
-        return ResponseEntity.ok(result);
+    @PostMapping("/calculate")
+    public String calculatePrice(
+            @RequestParam String name,
+            @RequestParam int age,
+            @RequestParam String carModel,
+            @RequestParam int carYear,
+            Model model) {
+
+        // Kullanıcının verdiği araba bilgilerini alarak fiyatı hesapla
+        CarPriceCalculator calculator = carPriceCalculatorService.calculatePriceFromInputs(name, age, carModel, carYear);
+
+        // Hesaplanan fiyatı modele ekle
+        model.addAttribute("price", calculator.getPrice());
+
+        // index.html sayfasını geri döndür
+        return "index";
     }
 }

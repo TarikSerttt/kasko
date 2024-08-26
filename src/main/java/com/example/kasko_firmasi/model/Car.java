@@ -13,23 +13,20 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Aracınızın modelini giriniz.")
     private String model;
 
-    @NotNull(message = "Aracınızın yaşını giriniz.")
+    @NotNull(message = "Aracınızın üretim yılını giriniz.")
     private int year;
 
-    @NotBlank(message = "Plakanızı giriniz")
+    @NotBlank(message = "Plakanızı giriniz.")
     private String licensePlate;
 
-    @NotBlank(message = "Marka gerekli")
+    @NotBlank(message = "Marka bilgisi gerekli.")
     private String brand;
-
-    private double price;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
-
-    private boolean priceAccepted;
 
 }

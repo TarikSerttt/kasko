@@ -53,19 +53,6 @@ public class CarController {
         return ResponseEntity.ok("Car deleted successfully.");
     }
 
-    @PutMapping("/{id}/accept-price")
-    public ResponseEntity<String> acceptPrice(@PathVariable Long id, @RequestBody boolean accept) {
-        Optional<Car> carOptional = carService.getCarById(id);
-        if (carOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        Car car = carOptional.get();
-        car.setPriceAccepted(accept); // Fiyatın kabul edilme durumu güncelleniyor
-        carService.updateCar(id, car); // Güncellenmiş araba veritabanına kaydediliyor
-        return ResponseEntity.ok(accept ? "Price accepted." : "Price declined.");
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCar(@PathVariable Long id, @Valid @RequestBody Car carDetails, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

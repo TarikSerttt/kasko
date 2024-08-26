@@ -7,7 +7,6 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-
 import java.util.List;
 
 @Data
@@ -18,18 +17,17 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Isminizi giriniz.")
+    @NotBlank(message = "İsminizi giriniz.")
     private String name;
 
     @NotNull(message = "Yaş boş olamaz.")
     @Positive(message = "Yaş pozitif bir sayı olmalıdır.")
     private int age;
 
-
     @NotBlank(message = "ID numarasını giriniz.")
     @Size(min = 11, max = 11, message = "Kimlik numarası 11 karakter uzunluğunda olmalıdır.")
     private String idNumber;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Car> cars;
 }
