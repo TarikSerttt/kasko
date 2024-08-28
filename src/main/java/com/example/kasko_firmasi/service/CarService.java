@@ -21,15 +21,15 @@ public class CarService {
     @Autowired
     private CarRepository carRepository;
 
-    public Car saveCar(@Valid Car car) {
+    public Car saveCar(@Valid Car car, String idNumber) {
         // Arabayı veritabanına kaydet
         Car savedCar = carRepository.save(car);
 
         // Arabanın fiyatını hesaplayıp CarPriceCalculator'a kaydet
-        //CarPriceCalculator calculator = carPriceCalculatorService.calculateAndSavePrice(savedCar.getId());
+        CarPriceCalculator calculator = carPriceCalculatorService.calculatePriceForCar(savedCar, car.getYear(), idNumber);
 
         // Hesaplanan fiyatı arabaya ayarla
-        //savedCar.setPrice(calculator.getPrice());
+        savedCar.setPrice(calculator.getPrice());
 
         // Arabayı tekrar güncelle ve kaydet
         return carRepository.save(savedCar);
@@ -52,7 +52,7 @@ public class CarService {
         }
     }
 
-    public Car updateCar(@NotNull Long id, @Valid Car carDetails) {
+    public Car updateCar(@NotNull Long id, @Valid Car carDetails, String idNumber) {
         if (carRepository.existsById(id)) {
             carDetails.setId(id);
 
@@ -60,10 +60,10 @@ public class CarService {
             Car updatedCar = carRepository.save(carDetails);
 
             // Fiyatı yeniden hesapla ve CarPriceCalculator'a kaydet
-            //CarPriceCalculator calculator = carPriceCalculatorService.calculateAndSavePrice(updatedCar.getId());
+            CarPriceCalculator calculator = carPriceCalculatorService.calculatePriceForCar(updatedCar, carDetails.getYear(), idNumber);
 
             // Güncellenen fiyatı arabaya ayarla
-            //updatedCar.setPrice(calculator.getPrice());
+            updatedCar.setPrice(calculator.getPrice());
 
             return carRepository.save(updatedCar);
         } else {

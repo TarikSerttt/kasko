@@ -1,16 +1,20 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kasko Fiyat Hesaplama</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <title>Kasko Firması</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
 <div class="container">
     <h1>Kasko Fiyat Hesaplama</h1>
-    <form th:action="@{/calculate}" method="post">
-        <label for="name">Ad:</label>
+
+    <form action="/calculate" method="POST">
+        <label for="idNumber">Kimlik ID:</label>
+        <input type="text" id="idNumber" name="idNumber" required>
+
+        <label for="name">İsim:</label>
         <input type="text" id="name" name="name" required>
 
         <label for="age">Yaş:</label>
@@ -22,12 +26,14 @@
         <label for="carYear">Araba Yılı:</label>
         <input type="number" id="carYear" name="carYear" required>
 
-        <button type="submit">Fiyatı Hesapla</button>
-    </form>
+        <label for="brand">Marka:</label>
+        <input type="text" id="brand" name="brand" required>
 
-    <div th:if="${price}">
-        <h2>Hesaplanan Fiyat: <span th:text="${price}"></span> TL</h2>
-    </div>
+        <label for="licensePlate">Plaka:</label>
+        <input type="text" id="licensePlate" name="licensePlate" required>
+
+        <button type="submit">Fiyat Hesapla</button>
+    </form>
 </div>
 </body>
 </html>

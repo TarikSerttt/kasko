@@ -23,11 +23,11 @@ public class CarController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addCar(@Valid @RequestBody Car car, BindingResult bindingResult) {
+    public ResponseEntity<?> addCar(@Valid @RequestBody Car car, @RequestParam String idNumber, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         }
-        Car savedCar = carService.saveCar(car);
+        Car savedCar = carService.saveCar(car, idNumber);
         return new ResponseEntity<>(savedCar, HttpStatus.CREATED);
     }
 
@@ -54,7 +54,7 @@ public class CarController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateCar(@PathVariable Long id, @Valid @RequestBody Car carDetails, BindingResult bindingResult) {
+    public ResponseEntity<?> updateCar(@PathVariable Long id, @Valid @RequestBody Car carDetails, @RequestParam String idNumber, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         }
@@ -64,7 +64,7 @@ public class CarController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Car not found with ID: " + id);
         }
 
-        Car updatedCar = carService.updateCar(id, carDetails);
+        Car updatedCar = carService.updateCar(id, carDetails, idNumber);
         return ResponseEntity.ok(updatedCar);
     }
 }

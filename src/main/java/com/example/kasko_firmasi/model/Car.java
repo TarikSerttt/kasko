@@ -2,8 +2,11 @@ package com.example.kasko_firmasi.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import java.util.List;
+
 
 @Data
 @Entity
@@ -13,7 +16,7 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Aracınızın modelini giriniz.")
+    @NotEmpty(message = "Aracınızın modelini giriniz.")
     private String model;
 
     @NotNull(message = "Aracınızın üretim yılını giriniz.")
@@ -25,8 +28,13 @@ public class Car {
     @NotBlank(message = "Marka bilgisi gerekli.")
     private String brand;
 
+
+    private double price;
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
+
+    @OneToMany(mappedBy = "car")
+    private List<CarPriceCalculator> carPriceCalculators;
 
 }

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kasko Fiyat Sonucu</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div class="container">
+    <h1>Hesaplanan Kasko Fiyatı</h1>
+
+    <p>Hesaplanan Fiyat: <strong>${price} TL</strong></p>
+
+    <form action="/confirm" method="post">
+        <input type="hidden" name="id" value="${calculatorId}">
+        <button type="submit" name="isAccepted" value="true">Kabul Et</button>
+        <button type="submit" name="isAccepted" value="false">Reddet</button>
+    </form>
+
+    <div>
+        <p>${message}</p>
+    </div>
+</div>
+</body>
+</html>
